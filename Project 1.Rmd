@@ -1,0 +1,74 @@
+---
+title: "BIOS 611 Project 1"
+author: "Lorel Schmitzberger"
+date: "9/24/2018"
+output: html_document
+---
+## Number of Arrests by Crime
+
+```{r}
+library(tidyverse)
+data(USArrests)
+USArrests <- data.frame(USArrests)
+arrests <- USArrests %>% gather(key = crime, value = arrests, -UrbanPop) 
+arrests %>% 
+  group_by(crime) %>% 
+  summarise(avg_arrests = mean(arrests, na.rm = TRUE)) %>% 
+ggplot(aes(x=crime, y=avg_arrests)) + 
+  geom_bar(stat="identity")+
+  xlab("Crime")+
+  ylab("Average Number of Arrests (per 100,000)")
+```
+
+The data set `USArrests` contains statistics on the number of arrests (per 100,000 residents) in 1973 by murder, assault, and rape. The data are divided by state and include the percent of the population living in urban areas. The figure above shows the number of arrests by crime. The most arrests were for assault crimes (171 arrests per 100,000) and least arrests were for murder (7.79 arrests per 100,000). It would be interesting to look at the data at a state-level and see how urban population affects crime rates.
+
+
+## Distribution of Driver Deaths Before and After Introduction of Seat Belts
+```{r}
+
+data(Seatbelts)
+Seatbelts <- data.frame(Seatbelts)
+Seatbelts %>%  
+ggplot(aes(x=factor(law),y=DriversKilled)) + 
+  geom_boxplot()+
+  xlab("Law in Effect")+
+  ylab("Drivers Killed")
+```
+
+ The `Seatbelts` data set gives information on road casualties in Great Britain from 1969-1984. Wearing seat belts was made compulsory on January 31, 1983, so I was curious to see how the implementation of the new law would affect road casualty statistics. The above figure is a boxplot comparing distribution of driver deaths with (x=1) and without (x=0) the new law. Before the new law, the distribution was much wider and the median number of deaths was 121. After the law, there is less variance in deaths and the median number of driver deaths drops to 92. 
+  
+  
+## Titanic Survivors by Class and Sex  
+    
+```{r}
+
+data(Titanic)
+Titanic <- data.frame(Titanic)
+Titanic %>% 
+  ggplot(aes(x=Survived, weight=Freq))+
+  geom_bar()+
+  facet_grid(Sex~Class)
+```
+
+The data set `Titanic` shows the survival of passengers on the Titanic grouped by class, sex, and age. The above figure is a multi-faceted bar chat showing survival by class and sex. Looking across males, we can see many more male fatalities than survivals. While there were less females on the Titanic than males, most of the first class women survived, and only in the third class were there more fatalities than survivals for women. It would also be interesting to look at age and sex, as women and children were often prioritized in rescues.
+
+## Comparison of Two Drugs on Sleep
+```{r}
+
+data(sleep)
+sleep <- data.frame(sleep)
+      sleep %>%  
+      ggplot(aes(x=factor(group),y=extra)) + 
+      geom_boxplot()+
+  xlab("Group")+
+  ylab("Increase in Hours of Sleep")
+```
+ 
+```{r}
+ sleep %>%  
+      group_by(group) %>% 
+      summarise(mean=mean(extra))
+```
+
+
+Student's Sleep Data shows the effect of two soporific drugs on ten patients. The drugs aimed to increase hours of sleep. The above figure is a comparison of the two groups' distributions. Group 2 shows a higher range of increased hours of sleep than Group 1, indicating the drug from Group 2 performed better. Group 1 increased only .75 hours in sleep, while Group 2 increased by 2.33 hours.
